@@ -1,0 +1,8 @@
+import 'git.just'
+
+# Variables
+config_dir := env_var('HOME') + '/.config/just'
+global_alias := 'jg'
+
+_default:
+    @just --justfile {{justfile()}} --list

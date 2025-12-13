@@ -1,0 +1,49 @@
+{
+  "name": "@moseoh/mst",
+  "version": "1.0.0",
+  "description": "Moseoh Setup Tool - 개인 개발 환경 셋업 자동화 CLI",
+  "type": "module",
+  "main": "dist/cli.js",
+  "bin": {
+    "mst": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/cli.js",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist",
+    "assets"
+  ],
+  "keywords": [
+    "cli",
+    "setup",
+    "dotfiles",
+    "automation"
+  ],
+  "author": "moseoh",
+  "license": "MIT",
+  "dependencies": {
+    "fs-extra": "^11.2.0",
+    "ora": "^9.0.0",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/moseoh/mst.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}
