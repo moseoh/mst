@@ -1,6 +1,6 @@
 # mst
 
-개인 개발 환경 셋업 자동화 CLI
+Moseoh Setup Tool (MST) - 개인 개발 환경 자동화 및 설정 동기화 CLI
 
 ## Install
 
