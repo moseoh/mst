@@ -12,7 +12,7 @@ git push -u origin chore/release
 
 # 2. PR 생성 → 머지
 gh pr create --title "chore: release v$(npm pkg get version | tr -d '\"')" --fill
-gh pr merge --auto --delete-branch
+gh pr merge --admin --squash --delete-branch
 
 # 3. main에서 태그 생성 및 푸시
 git checkout main
