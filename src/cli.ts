@@ -2,12 +2,13 @@
 
 import ora from "ora";
 import pc from "picocolors";
+import pkg from "../package.json" with { type: "json" };
 import { justTasks } from "./tasks/just.js";
 import { claudeTasks } from "./tasks/claude.js";
 import { sample1Task, sample2Task } from "./tasks/sample.js";
 import type { Task } from "./types.js";
 
-const VERSION = "1.0.0";
+const { version: VERSION } = pkg;
 
 const tasks: Task[] = [...justTasks, ...claudeTasks, sample1Task, sample2Task];
 
