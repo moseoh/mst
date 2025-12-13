@@ -4,6 +4,7 @@ main 브랜치가 보호되어 있으므로 PR을 통해 릴리즈 진행
 
 ```bash
 # 1. release 브랜치 생성 및 버전 업데이트
+git branch -D chore/release
 git checkout -b chore/release
 npm version patch --no-git-tag-version  # patch | minor | major
 git add package.json package-lock.json
@@ -11,7 +12,7 @@ git commit -m "chore: bump version to $(npm pkg get version | tr -d '\"')"
 git push -u origin chore/release
 
 # 2. PR 생성 → 머지
-gh pr create --title "chore: release v$(npm pkg get version | tr -d '\"')" --fill
+gh pr create --title "chore: release v$(npm pkg get version | tr -d '\"')" --label release --fill
 gh pr merge --admin --squash --delete-branch
 
 # 3. main에서 태그 생성 및 푸시

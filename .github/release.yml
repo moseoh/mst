@@ -5,6 +5,7 @@ changelog:
       - invalid
       - question
       - wontfix
+      - release
     authors:
       - dependabot
   categories:
