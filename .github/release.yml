@@ -1,16 +1,25 @@
 changelog:
   exclude:
+    labels:
+      - duplicate
+      - invalid
+      - question
+      - wontfix
     authors:
       - dependabot
   categories:
     - title: Features
       labels:
         - enhancement
-        - feat
     - title: Bug Fixes
       labels:
         - bug
-        - fix
+    - title: Documentation
+      labels:
+        - documentation
+    - title: Dependencies
+      labels:
+        - dependencies
     - title: Other Changes
       labels:
         - "*"
