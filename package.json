@@ -1,6 +1,6 @@
 {
   "name": "@moseoh/mst",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Moseoh Setup Tool - 개인 개발 환경 셋업 자동화 CLI",
   "type": "module",
   "main": "dist/cli.js",
