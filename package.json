@@ -39,7 +39,7 @@
     "@vitest/coverage-v8": "^4.0.15",
     "memfs": "^4.51.1",
     "typescript": "^5.3.0",
-    "vitest": "^4.0.15"
+    "vitest": "^4.0.16"
   },
   "engines": {
     "node": ">=22.0.0",
