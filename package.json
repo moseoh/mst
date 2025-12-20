@@ -29,7 +29,7 @@
   "author": "moseoh",
   "license": "MIT",
   "dependencies": {
-    "fs-extra": "^11.2.0",
+    "fs-extra": "^11.3.3",
     "ora": "^9.0.0",
     "picocolors": "^1.1.1"
   },
