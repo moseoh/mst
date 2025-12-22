@@ -29,7 +29,8 @@ Based on the above changes, create a single git commit.
 You have the capability to call multiple tools in a single response. Stage and create the commit using a single message. Do not use any other tools or do anything else.
 
 After committing, show the user:
+
 ```
 커밋 완료!:
-<commit message>
+- <commit message>
 ```
