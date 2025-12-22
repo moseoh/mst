@@ -73,5 +73,10 @@
     "name": "wontfix",
     "color": "ffffff",
     "description": "수정하지 않을 이슈"
+  },
+  {
+    "name": "ignore-for-release",
+    "color": "ededed",
+    "description": "릴리즈 노트에서 제외"
   }
 ]
