@@ -6,12 +6,18 @@ changelog:
       - question
       - wontfix
       - release
-    authors:
-      - dependabot
+      - ignore-for-release
   categories:
+    - title: Breaking Changes
+      labels:
+        - breaking
     - title: Features
       labels:
-        - enhancement
+        - feature
+    - title: Improvements
+      labels:
+        - improvement
+        - performance
     - title: Bug Fixes
       labels:
         - bug
@@ -21,6 +27,9 @@ changelog:
     - title: Dependencies
       labels:
         - dependencies
+    - title: Maintenance
+      labels:
+        - maintenance
     - title: Other Changes
       labels:
         - "*"
