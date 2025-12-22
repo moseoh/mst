@@ -32,5 +32,5 @@ After committing, show the user:
 
 ```
 커밋 완료!:
-- <commit message>
+<full commit message including title and body>
 ```
