@@ -5,12 +5,11 @@ import pc from "picocolors";
 import pkg from "../package.json" with { type: "json" };
 import { justTasks } from "./tasks/just.js";
 import { claudeTasks } from "./tasks/claude.js";
-import { sample1Task, sample2Task } from "./tasks/sample.js";
-import type { Task } from "./types.js";
+import type { Task } from "./tasks/types.js";
 
 const { version: VERSION } = pkg;
 
-const tasks: Task[] = [...justTasks, ...claudeTasks, sample1Task, sample2Task];
+const tasks: Task[] = [...justTasks, ...claudeTasks];
 
 function showHelp(): void {
   console.log(`

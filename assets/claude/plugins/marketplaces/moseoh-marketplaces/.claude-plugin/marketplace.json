@@ -1,0 +1,10 @@
+{
+  "name": "moseoh-marketplaces",
+  "owner": { "name": "seongha.moon" },
+  "plugins": [
+    {
+      "name": "resume-builder",
+      "source": "./plugins/resume-builder"
+    }
+  ]
+}

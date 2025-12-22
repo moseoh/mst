@@ -8,5 +8,13 @@
     "type": "command",
     "command": "python3 ~/.claude/statusline.py"
   },
+  "extraKnownMarketplaces": {
+    "moseoh-marketplaces": {
+      "source": {
+        "source": "directory",
+        "path": "/Users/seongha.moon/.claude/plugins/marketplaces/moseoh-marketplaces"
+      }
+    }
+  },
   "alwaysThinkingEnabled": true
 }

@@ -43,22 +43,17 @@ describe("claudeTasks", () => {
       vi.stubEnv("HOME", homeDir);
       vi.stubEnv("USERPROFILE", "");
 
-      // assets 디렉토리 구조 생성
+      // assets 디렉토리 구조 생성 (commands 하위 디렉토리)
       vol.fromJSON({
-        "/assets/claude/settings.json": '{"theme": "dark"}',
-        "/assets/claude/CLAUDE.md": "# Claude Config",
+        "/assets/claude/commands/commit.md": "# commit command",
+        "/assets/claude/commands/pr.md": "# pr command",
         [`${homeDir}/.zshrc`]: "# existing config",
       });
 
-      // config 모듈의 ASSETS_DIR을 오버라이드하기 위해 모킹
-      vi.doMock("../config.js", () => ({
+      // lib/paths 모듈의 ASSETS_DIR, HOME_DIR을 오버라이드하기 위해 모킹
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: `${homeDir}/.zshrc`,
-          name: ".zshrc",
-          error: null,
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
@@ -78,14 +73,9 @@ describe("claudeTasks", () => {
         [`${homeDir}/.zshrc`]: "# existing config",
       });
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/nonexistent",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: `${homeDir}/.zshrc`,
-          name: ".zshrc",
-          error: null,
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
@@ -103,20 +93,15 @@ describe("claudeTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: `${homeDir}/.zshrc`,
-          name: ".zshrc",
-          error: null,
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
       const linkTask = claudeTasks[0];
 
-      const formatted = linkTask.formatResult({ errors: 2, success: 0, skipped: 0 });
+      const formatted = linkTask.formatResult({ errors: 2, success: 0, skipped: 0 } as never);
 
       expect(formatted).toContain("2 errors");
     });
@@ -128,20 +113,15 @@ describe("claudeTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: `${homeDir}/.zshrc`,
-          name: ".zshrc",
-          error: null,
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
       const linkTask = claudeTasks[0];
 
-      const formatted = linkTask.formatResult({ errors: 0, success: 3, skipped: 1 });
+      const formatted = linkTask.formatResult({ errors: 0, success: 3, skipped: 1 } as never);
 
       expect(formatted).toContain("3 linked");
       expect(formatted).toContain("1 skipped");
@@ -158,18 +138,13 @@ describe("claudeTasks", () => {
         [`${homeDir}/.zshrc`]: "# existing config\n",
       });
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: `${homeDir}/.zshrc`,
-          name: ".zshrc",
-          error: null,
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
-      const aliasTask = claudeTasks[1];
+      const aliasTask = claudeTasks[2];
 
       const result = await aliasTask.run();
 
@@ -183,18 +158,13 @@ describe("claudeTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: null,
-          name: null,
-          error: "no shell rc file found",
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
-      const aliasTask = claudeTasks[1];
+      const aliasTask = claudeTasks[2];
 
       const result = await aliasTask.run();
 
@@ -208,25 +178,20 @@ describe("claudeTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: null,
-          name: null,
-          error: null,
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
-      const aliasTask = claudeTasks[1];
+      const aliasTask = claudeTasks[2];
 
       const formatted = aliasTask.formatResult({
         errors: 1,
         added: false,
         file: null,
         error: "some error",
-      });
+      } as never);
 
       expect(formatted).toContain("some error");
     });
@@ -238,25 +203,20 @@ describe("claudeTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: null,
-          name: null,
-          error: null,
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
-      const aliasTask = claudeTasks[1];
+      const aliasTask = claudeTasks[2];
 
       const formatted = aliasTask.formatResult({
         errors: 0,
         added: true,
         file: ".zshrc",
         error: null,
-      });
+      } as never);
 
       expect(formatted).toContain("added");
       expect(formatted).toContain(".zshrc");
@@ -269,25 +229,20 @@ describe("claudeTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: null,
-          name: null,
-          error: null,
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
-      const aliasTask = claudeTasks[1];
+      const aliasTask = claudeTasks[2];
 
       const formatted = aliasTask.formatResult({
         errors: 0,
         added: false,
         file: ".zshrc",
         error: null,
-      });
+      } as never);
 
       expect(formatted).toContain("skipped");
     });

@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { vol } from "memfs";
-import { appendIfMissing } from "./file.js";
 
 vi.mock("fs-extra", async () => {
   const memfs = await import("memfs");
   return {
     default: {
+      ...memfs.fs.promises,
       pathExists: async (p: string) => {
         try {
           await memfs.fs.promises.access(p);
@@ -21,9 +21,85 @@ vi.mock("fs-extra", async () => {
   };
 });
 
+describe("getShellRcPath", () => {
+  beforeEach(() => {
+    vol.reset();
+    vi.resetModules();
+  });
+
+  it(".zshrc가 존재하면 .zshrc 경로를 반환해야 한다", async () => {
+    const homeDir = "/home/test";
+    vol.fromJSON({
+      [`${homeDir}/.zshrc`]: "# zsh config",
+    });
+
+    vi.stubEnv("HOME", homeDir);
+    vi.stubEnv("USERPROFILE", "");
+
+    const { getShellRcPath } = await import("./alias.js");
+    const result = await getShellRcPath();
+
+    expect(result.path).toBe(`${homeDir}/.zshrc`);
+    expect(result.name).toBe(".zshrc");
+    expect(result.error).toBeNull();
+  });
+
+  it(".zshrc가 없고 .bashrc가 있으면 .bashrc 경로를 반환해야 한다", async () => {
+    const homeDir = "/home/test";
+    vol.fromJSON({
+      [`${homeDir}/.bashrc`]: "# bash config",
+    });
+
+    vi.stubEnv("HOME", homeDir);
+    vi.stubEnv("USERPROFILE", "");
+
+    const { getShellRcPath } = await import("./alias.js");
+    const result = await getShellRcPath();
+
+    expect(result.path).toBe(`${homeDir}/.bashrc`);
+    expect(result.name).toBe(".bashrc");
+    expect(result.error).toBeNull();
+  });
+
+  it("둘 다 없으면 에러를 반환해야 한다", async () => {
+    const homeDir = "/home/test";
+    vol.fromJSON({
+      [`${homeDir}/other.txt`]: "some file",
+    });
+
+    vi.stubEnv("HOME", homeDir);
+    vi.stubEnv("USERPROFILE", "");
+
+    const { getShellRcPath } = await import("./alias.js");
+    const result = await getShellRcPath();
+
+    expect(result.path).toBeNull();
+    expect(result.name).toBeNull();
+    expect(result.error).toBe("no shell rc file found (.zshrc or .bashrc)");
+  });
+
+  it(".zshrc와 .bashrc 둘 다 있으면 .zshrc를 우선해야 한다", async () => {
+    const homeDir = "/home/test";
+    vol.fromJSON({
+      [`${homeDir}/.zshrc`]: "# zsh config",
+      [`${homeDir}/.bashrc`]: "# bash config",
+    });
+
+    vi.stubEnv("HOME", homeDir);
+    vi.stubEnv("USERPROFILE", "");
+
+    const { getShellRcPath } = await import("./alias.js");
+    const result = await getShellRcPath();
+
+    expect(result.path).toBe(`${homeDir}/.zshrc`);
+    expect(result.name).toBe(".zshrc");
+  });
+});
+
 describe("appendIfMissing", () => {
   beforeEach(() => {
     vol.reset();
+    vi.resetModules();
   });
 
   afterEach(() => {
@@ -35,6 +111,8 @@ describe("appendIfMissing", () => {
       vol.fromJSON({
         "/test": null, // 디렉토리 생성
       });
+
+      const { appendIfMissing } = await import("./alias.js");
       const result = await appendIfMissing("/test/file.txt", "hello world");
 
       expect(result).toBe("success");
@@ -48,6 +126,7 @@ describe("appendIfMissing", () => {
         "/test/file.txt": "hello world\n",
       });
 
+      const { appendIfMissing } = await import("./alias.js");
       const result = await appendIfMissing("/test/file.txt", "hello world");
 
       expect(result).toBe("skip");
@@ -58,6 +137,7 @@ describe("appendIfMissing", () => {
         "/test/file.txt": "existing content\n",
       });
 
+      const { appendIfMissing } = await import("./alias.js");
       const result = await appendIfMissing("/test/file.txt", "new content");
 
       expect(result).toBe("success");
@@ -71,6 +151,7 @@ describe("appendIfMissing", () => {
         "/test/file.txt": "  hello world  \n",
       });
 
+      const { appendIfMissing } = await import("./alias.js");
       const result = await appendIfMissing("/test/file.txt", "  hello world  ");
 
       expect(result).toBe("skip");
@@ -80,7 +161,8 @@ describe("appendIfMissing", () => {
   describe("에러 처리", () => {
     it("존재하지 않는 디렉토리에 파일 작성 시 error를 반환해야 한다", async () => {
       vol.fromJSON({});
-      // /nonexistent 디렉토리가 존재하지 않으므로 에러 발생
+
+      const { appendIfMissing } = await import("./alias.js");
       const result = await appendIfMissing("/nonexistent/file.txt", "content");
       expect(result).toBe("error");
     });

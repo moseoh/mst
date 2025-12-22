@@ -48,14 +48,9 @@ describe("justTasks", () => {
         [`${homeDir}/.zshrc`]: "# existing config",
       });
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: `${homeDir}/.zshrc`,
-          name: ".zshrc",
-          error: null,
-        }),
       }));
 
       const { justTasks } = await import("./just.js");
@@ -75,14 +70,9 @@ describe("justTasks", () => {
         [`${homeDir}/.zshrc`]: "# existing config",
       });
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/nonexistent",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: `${homeDir}/.zshrc`,
-          name: ".zshrc",
-          error: null,
-        }),
       }));
 
       const { justTasks } = await import("./just.js");
@@ -100,20 +90,15 @@ describe("justTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: `${homeDir}/.zshrc`,
-          name: ".zshrc",
-          error: null,
-        }),
       }));
 
       const { justTasks } = await import("./just.js");
       const linkTask = justTasks[0];
 
-      const formatted = linkTask.formatResult({ errors: 2, success: 0, skipped: 0 });
+      const formatted = linkTask.formatResult({ errors: 2, success: 0, skipped: 0 } as never);
 
       expect(formatted).toContain("2 errors");
     });
@@ -125,20 +110,15 @@ describe("justTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: `${homeDir}/.zshrc`,
-          name: ".zshrc",
-          error: null,
-        }),
       }));
 
       const { justTasks } = await import("./just.js");
       const linkTask = justTasks[0];
 
-      const formatted = linkTask.formatResult({ errors: 0, success: 5, skipped: 2 });
+      const formatted = linkTask.formatResult({ errors: 0, success: 5, skipped: 2 } as never);
 
       expect(formatted).toContain("5 linked");
       expect(formatted).toContain("2 skipped");
@@ -155,14 +135,9 @@ describe("justTasks", () => {
         [`${homeDir}/.zshrc`]: "# existing config\n",
       });
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: `${homeDir}/.zshrc`,
-          name: ".zshrc",
-          error: null,
-        }),
       }));
 
       const { justTasks } = await import("./just.js");
@@ -180,14 +155,9 @@ describe("justTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: null,
-          name: null,
-          error: "no shell rc file found",
-        }),
       }));
 
       const { justTasks } = await import("./just.js");
@@ -205,14 +175,9 @@ describe("justTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: null,
-          name: null,
-          error: null,
-        }),
       }));
 
       const { justTasks } = await import("./just.js");
@@ -223,7 +188,7 @@ describe("justTasks", () => {
         added: false,
         file: null,
         error: "some error",
-      });
+      } as never);
 
       expect(formatted).toContain("some error");
     });
@@ -235,14 +200,9 @@ describe("justTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: null,
-          name: null,
-          error: null,
-        }),
       }));
 
       const { justTasks } = await import("./just.js");
@@ -253,7 +213,7 @@ describe("justTasks", () => {
         added: true,
         file: ".bashrc",
         error: null,
-      });
+      } as never);
 
       expect(formatted).toContain("added");
       expect(formatted).toContain(".bashrc");
@@ -266,14 +226,9 @@ describe("justTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: null,
-          name: null,
-          error: null,
-        }),
       }));
 
       const { justTasks } = await import("./just.js");
@@ -284,7 +239,7 @@ describe("justTasks", () => {
         added: false,
         file: ".bashrc",
         error: null,
-      });
+      } as never);
 
       expect(formatted).toContain("skipped");
     });
