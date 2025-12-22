@@ -3,6 +3,10 @@
   "owner": { "name": "seongha.moon" },
   "plugins": [
     {
+      "name": "git",
+      "source": "./plugins/git"
+    },
+    {
       "name": "resume-builder",
       "source": "./plugins/resume-builder"
     }

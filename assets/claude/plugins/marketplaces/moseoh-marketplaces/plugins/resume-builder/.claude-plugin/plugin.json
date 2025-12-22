@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "JD 기반 맞춤형 이력서 및 자기소개서 작성 도우미",
   "author": {
-    "name": "seongha.moon"
-  },
-  "keywords": ["resume", "cover-letter", "job-application", "career"]
+    "name": "seongha.moon",
+    "email": "azqazq195@gmail.com"
+  }
 }
