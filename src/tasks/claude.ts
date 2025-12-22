@@ -1,13 +1,9 @@
 import path from "path";
 import pc from "picocolors";
-import { ASSETS_DIR, HOME_DIR, getShellRcPath } from "../config.js";
-import {
-  linkFiles,
-  linkFolder,
-  appendIfMissing,
-  type LinkResult,
-} from "../utils/index.js";
-import type { Task, TaskResult } from "../types.js";
+import { ASSETS_DIR, HOME_DIR } from "../lib/paths.js";
+import { linkFiles, linkFolder, type LinkResult } from "../lib/symlink.js";
+import { setupAlias, type AliasResult } from "../lib/alias.js";
+import type { Task, TaskResult } from "./types.js";
 
 const SRC_DIR = path.join(ASSETS_DIR, "claude");
 const DEST_DIR = path.join(HOME_DIR, ".claude");
@@ -58,36 +54,12 @@ const claudeFolderLinkTask: Task = {
 };
 
 // Alias Task
-interface AliasResult extends TaskResult {
-  added: boolean;
-  file: string | null;
-  error: string | null;
-}
-
 const claudeAliasTask: Task = {
   name: "setup claude alias",
   description: "~/.zshrc or ~/.bashrc",
 
   async run(): Promise<AliasResult> {
-    const shellRc = await getShellRcPath();
-
-    if (shellRc.error) {
-      return {
-        errors: 1,
-        added: false,
-        file: null,
-        error: shellRc.error,
-      };
-    }
-
-    const result = await appendIfMissing(shellRc.path!, ALIAS_CONTENT);
-
-    return {
-      errors: result === "error" ? 1 : 0,
-      added: result === "success",
-      file: shellRc.name,
-      error: result === "error" ? "failed to write" : null,
-    };
+    return setupAlias({ content: ALIAS_CONTENT });
   },
 
   formatResult(result: TaskResult): string {

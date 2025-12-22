@@ -43,22 +43,17 @@ describe("claudeTasks", () => {
       vi.stubEnv("HOME", homeDir);
       vi.stubEnv("USERPROFILE", "");
 
-      // assets 디렉토리 구조 생성
+      // assets 디렉토리 구조 생성 (commands 하위 디렉토리)
       vol.fromJSON({
-        "/assets/claude/settings.json": '{"theme": "dark"}',
-        "/assets/claude/CLAUDE.md": "# Claude Config",
+        "/assets/claude/commands/commit.md": "# commit command",
+        "/assets/claude/commands/pr.md": "# pr command",
         [`${homeDir}/.zshrc`]: "# existing config",
       });
 
-      // config 모듈의 ASSETS_DIR을 오버라이드하기 위해 모킹
-      vi.doMock("../config.js", () => ({
+      // lib/paths 모듈의 ASSETS_DIR, HOME_DIR을 오버라이드하기 위해 모킹
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: `${homeDir}/.zshrc`,
-          name: ".zshrc",
-          error: null,
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
@@ -78,14 +73,9 @@ describe("claudeTasks", () => {
         [`${homeDir}/.zshrc`]: "# existing config",
       });
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/nonexistent",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: `${homeDir}/.zshrc`,
-          name: ".zshrc",
-          error: null,
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
@@ -103,14 +93,9 @@ describe("claudeTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: `${homeDir}/.zshrc`,
-          name: ".zshrc",
-          error: null,
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
@@ -128,14 +113,9 @@ describe("claudeTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: `${homeDir}/.zshrc`,
-          name: ".zshrc",
-          error: null,
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
@@ -158,14 +138,9 @@ describe("claudeTasks", () => {
         [`${homeDir}/.zshrc`]: "# existing config\n",
       });
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: `${homeDir}/.zshrc`,
-          name: ".zshrc",
-          error: null,
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
@@ -183,14 +158,9 @@ describe("claudeTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: null,
-          name: null,
-          error: "no shell rc file found",
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
@@ -208,14 +178,9 @@ describe("claudeTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: null,
-          name: null,
-          error: null,
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
@@ -238,14 +203,9 @@ describe("claudeTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: null,
-          name: null,
-          error: null,
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
@@ -269,14 +229,9 @@ describe("claudeTasks", () => {
 
       vol.fromJSON({});
 
-      vi.doMock("../config.js", () => ({
+      vi.doMock("../lib/paths.js", () => ({
         ASSETS_DIR: "/assets",
         HOME_DIR: homeDir,
-        getShellRcPath: async () => ({
-          path: null,
-          name: null,
-          error: null,
-        }),
       }));
 
       const { claudeTasks } = await import("./claude.js");
