@@ -1,0 +1,70 @@
+feature:
+  - head-branch:
+      - '^feat/'
+      - '^feat-'
+      - '^feature/'
+      - '^feature-'
+
+improvement:
+  - head-branch:
+      - '^improve/'
+      - '^improve-'
+      - '^improvement/'
+      - '^enhancement/'
+      - '^enhance/'
+
+performance:
+  - head-branch:
+      - '^perf/'
+      - '^perf-'
+      - '^performance/'
+
+bug:
+  - head-branch:
+      - '^fix/'
+      - '^fix-'
+      - '^bug/'
+      - '^bug-'
+      - '^bugfix/'
+      - '^hotfix/'
+
+documentation:
+  - head-branch:
+      - '^docs/'
+      - '^docs-'
+      - '^doc/'
+      - '^documentation/'
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'docs/**'
+          - '**/*.md'
+
+dependencies:
+  - head-branch:
+      - '^deps/'
+      - '^deps-'
+      - '^dep/'
+      - '^dependency/'
+      - '^dependencies/'
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'package.json'
+          - 'package-lock.json'
+
+maintenance:
+  - head-branch:
+      - '^chore/'
+      - '^chore-'
+      - '^refactor/'
+      - '^refactor-'
+      - '^refactoring/'
+      - '^ci/'
+      - '^ci-'
+      - '^build/'
+      - '^test/'
+      - '^test-'
+      - '^tests/'
+      - '^testing/'
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/**'
