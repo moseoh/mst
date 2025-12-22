@@ -1,5 +1,4 @@
 ---
-name: create-resume
 description: JD 기반 이력서/자기소개서 작성 워크플로우 시작
 argument-hint: <회사명>
 allowed-tools: ["Read", "Write", "Glob", "Task", "AskUserQuestion"]

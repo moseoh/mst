@@ -1,5 +1,4 @@
 ---
-name: validate-phase
 description: 특정 Phase의 결과물을 원본 프롬프트와 비교 검증
 argument-hint: <phase번호> @{결과물파일}
 allowed-tools: ["Task"]
