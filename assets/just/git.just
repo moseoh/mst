@@ -215,3 +215,60 @@ quick-push:
     echo ""
     echo "=================================================="
     echo "🎉 빠른 푸쉬 완료!"
+
+# GitHub Labels 동기화
+[group('git')]
+update-labels:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    JUST_DIR="{{justfile_directory()}}"
+
+    echo "🏷️  GitHub Labels 동기화 스크립트"
+    echo "=================================================="
+
+    # Repository 정보 추출
+    REMOTE_URL=$(git remote get-url origin)
+    if [[ $REMOTE_URL == git@github.com:* ]]; then
+        REPO_PATH="${REMOTE_URL#git@github.com:}"
+        REPO_PATH="${REPO_PATH%.git}"
+    else
+        REPO_PATH="${REMOTE_URL#https://github.com/}"
+        REPO_PATH="${REPO_PATH%.git}"
+    fi
+
+    echo ""
+    echo "📁 Repository: $REPO_PATH"
+
+    # github-label-sync 설치 확인
+    echo ""
+    echo "🔍 github-label-sync 설치 확인 중..."
+    if [ ! -f "$JUST_DIR/node_modules/.bin/github-label-sync" ]; then
+        echo "📦 github-label-sync 설치 중..."
+        npm install --prefix "$JUST_DIR" github-label-sync
+    fi
+    echo "✅ github-label-sync가 설치되어 있습니다."
+
+    # GitHub 토큰 가져오기
+    echo ""
+    echo "🔑 GitHub 토큰 가져오는 중..."
+    GITHUB_TOKEN=$(gh auth token)
+    if [ -z "$GITHUB_TOKEN" ]; then
+        echo "❌ GitHub 토큰을 가져올 수 없습니다."
+        echo "gh auth login으로 로그인해주세요."
+        exit 1
+    fi
+    echo "✅ GitHub 토큰을 가져왔습니다."
+
+    # Labels 동기화
+    echo ""
+    echo "🔄 Labels 동기화 중..."
+    "$JUST_DIR/node_modules/.bin/github-label-sync" \
+        --access-token "$GITHUB_TOKEN" \
+        --labels "$JUST_DIR/labels.json" \
+        "$REPO_PATH"
+
+    echo ""
+    echo "=================================================="
+    echo "🎉 GitHub Labels 동기화가 완료되었습니다!"
+    echo "🌐 확인: https://github.com/$REPO_PATH/labels"
