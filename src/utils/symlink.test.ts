@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { vol } from "memfs";
-import { linkFolder, type FolderLinkConfig } from "./symlink.js";
+import { linkFiles, type FilesLinkConfig } from "./symlink.js";
 
 vi.mock("fs-extra", async () => {
   const memfs = await import("memfs");
@@ -29,7 +29,7 @@ vi.mock("fs-extra", async () => {
   };
 });
 
-describe("linkFolder", () => {
+describe("linkFiles", () => {
   beforeEach(() => {
     vol.reset();
   });
@@ -38,13 +38,12 @@ describe("linkFolder", () => {
     it("errors를 1 증가시키고 반환해야 한다", async () => {
       vol.fromJSON({});
 
-      const config: FolderLinkConfig = {
-        name: "test",
+      const config: FilesLinkConfig = {
         srcDir: "/nonexistent",
         destDir: "/dest",
       };
 
-      const result = await linkFolder(config);
+      const result = await linkFiles(config);
 
       expect(result.errors).toBe(1);
       expect(result.success).toBe(0);
@@ -58,13 +57,12 @@ describe("linkFolder", () => {
         "/src/file.txt": "content",
       });
 
-      const config: FolderLinkConfig = {
-        name: "test",
+      const config: FilesLinkConfig = {
         srcDir: "/src",
         destDir: "/dest",
       };
 
-      const result = await linkFolder(config);
+      const result = await linkFiles(config);
 
       expect(result.success).toBe(1);
       expect(result.skipped).toBe(0);
@@ -80,13 +78,12 @@ describe("linkFolder", () => {
         "/src/file3.txt": "content3",
       });
 
-      const config: FolderLinkConfig = {
-        name: "test",
+      const config: FilesLinkConfig = {
         srcDir: "/src",
         destDir: "/dest",
       };
 
-      const result = await linkFolder(config);
+      const result = await linkFiles(config);
 
       expect(result.success).toBe(3);
       expect(result.skipped).toBe(0);
@@ -102,13 +99,12 @@ describe("linkFolder", () => {
         "/src/subdir/deep/file3.txt": "content3",
       });
 
-      const config: FolderLinkConfig = {
-        name: "test",
+      const config: FilesLinkConfig = {
         srcDir: "/src",
         destDir: "/dest",
       };
 
-      const result = await linkFolder(config);
+      const result = await linkFiles(config);
 
       expect(result.success).toBe(3);
       expect(result.errors).toBe(0);
@@ -122,13 +118,12 @@ describe("linkFolder", () => {
         "/src/.DS_Store": "ignore",
       });
 
-      const config: FolderLinkConfig = {
-        name: "test",
+      const config: FilesLinkConfig = {
         srcDir: "/src",
         destDir: "/dest",
       };
 
-      const result = await linkFolder(config);
+      const result = await linkFiles(config);
 
       expect(result.success).toBe(1);
       expect(result.skipped).toBe(0);
@@ -140,13 +135,12 @@ describe("linkFolder", () => {
         "/src/Thumbs.db": "ignore",
       });
 
-      const config: FolderLinkConfig = {
-        name: "test",
+      const config: FilesLinkConfig = {
         srcDir: "/src",
         destDir: "/dest",
       };
 
-      const result = await linkFolder(config);
+      const result = await linkFiles(config);
 
       expect(result.success).toBe(1);
     });
@@ -157,13 +151,12 @@ describe("linkFolder", () => {
         "/src/.gitkeep": "",
       });
 
-      const config: FolderLinkConfig = {
-        name: "test",
+      const config: FilesLinkConfig = {
         srcDir: "/src",
         destDir: "/dest",
       };
 
-      const result = await linkFolder(config);
+      const result = await linkFiles(config);
 
       expect(result.success).toBe(1);
     });
@@ -179,13 +172,12 @@ describe("linkFolder", () => {
       // 심볼릭 링크 생성
       vol.symlinkSync("/src/file.txt", "/dest/file.txt");
 
-      const config: FolderLinkConfig = {
-        name: "test",
+      const config: FilesLinkConfig = {
         srcDir: "/src",
         destDir: "/dest",
       };
 
-      const result = await linkFolder(config);
+      const result = await linkFiles(config);
 
       expect(result.skipped).toBe(1);
       expect(result.success).toBe(0);
@@ -197,13 +189,12 @@ describe("linkFolder", () => {
         "/dest/file.txt": "existing content",
       });
 
-      const config: FolderLinkConfig = {
-        name: "test",
+      const config: FilesLinkConfig = {
         srcDir: "/src",
         destDir: "/dest",
       };
 
-      const result = await linkFolder(config);
+      const result = await linkFiles(config);
 
       expect(result.skipped).toBe(1);
       expect(result.success).toBe(0);
@@ -216,13 +207,12 @@ describe("linkFolder", () => {
         "/src/empty/.gitkeep": "",
       });
 
-      const config: FolderLinkConfig = {
-        name: "test",
+      const config: FilesLinkConfig = {
         srcDir: "/src",
         destDir: "/dest",
       };
 
-      const result = await linkFolder(config);
+      const result = await linkFiles(config);
 
       // .gitkeep은 무시되므로 success는 0
       expect(result.success).toBe(0);

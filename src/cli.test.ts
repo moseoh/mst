@@ -211,7 +211,7 @@ describe("CLI", () => {
       expect(mockConsoleLog).toHaveBeenCalled();
       // 알 수 없는 명령어 메시지 확인
       const calls = mockConsoleLog.mock.calls.map((c: unknown[]) => c[0]);
-      const hasUnknownMessage = calls.some((c: string) => c && c.includes && c.includes("Unknown"));
+      const hasUnknownMessage = calls.some((c) => typeof c === "string" && c.includes("Unknown"));
       expect(hasUnknownMessage).toBe(true);
       expect(mockProcessExit).toHaveBeenCalledWith(1);
     });

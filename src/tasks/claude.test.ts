@@ -116,7 +116,7 @@ describe("claudeTasks", () => {
       const { claudeTasks } = await import("./claude.js");
       const linkTask = claudeTasks[0];
 
-      const formatted = linkTask.formatResult({ errors: 2, success: 0, skipped: 0 });
+      const formatted = linkTask.formatResult({ errors: 2, success: 0, skipped: 0 } as never);
 
       expect(formatted).toContain("2 errors");
     });
@@ -141,7 +141,7 @@ describe("claudeTasks", () => {
       const { claudeTasks } = await import("./claude.js");
       const linkTask = claudeTasks[0];
 
-      const formatted = linkTask.formatResult({ errors: 0, success: 3, skipped: 1 });
+      const formatted = linkTask.formatResult({ errors: 0, success: 3, skipped: 1 } as never);
 
       expect(formatted).toContain("3 linked");
       expect(formatted).toContain("1 skipped");
@@ -169,7 +169,7 @@ describe("claudeTasks", () => {
       }));
 
       const { claudeTasks } = await import("./claude.js");
-      const aliasTask = claudeTasks[1];
+      const aliasTask = claudeTasks[2];
 
       const result = await aliasTask.run();
 
@@ -194,7 +194,7 @@ describe("claudeTasks", () => {
       }));
 
       const { claudeTasks } = await import("./claude.js");
-      const aliasTask = claudeTasks[1];
+      const aliasTask = claudeTasks[2];
 
       const result = await aliasTask.run();
 
@@ -219,14 +219,14 @@ describe("claudeTasks", () => {
       }));
 
       const { claudeTasks } = await import("./claude.js");
-      const aliasTask = claudeTasks[1];
+      const aliasTask = claudeTasks[2];
 
       const formatted = aliasTask.formatResult({
         errors: 1,
         added: false,
         file: null,
         error: "some error",
-      });
+      } as never);
 
       expect(formatted).toContain("some error");
     });
@@ -249,14 +249,14 @@ describe("claudeTasks", () => {
       }));
 
       const { claudeTasks } = await import("./claude.js");
-      const aliasTask = claudeTasks[1];
+      const aliasTask = claudeTasks[2];
 
       const formatted = aliasTask.formatResult({
         errors: 0,
         added: true,
         file: ".zshrc",
         error: null,
-      });
+      } as never);
 
       expect(formatted).toContain("added");
       expect(formatted).toContain(".zshrc");
@@ -280,14 +280,14 @@ describe("claudeTasks", () => {
       }));
 
       const { claudeTasks } = await import("./claude.js");
-      const aliasTask = claudeTasks[1];
+      const aliasTask = claudeTasks[2];
 
       const formatted = aliasTask.formatResult({
         errors: 0,
         added: false,
         file: ".zshrc",
         error: null,
-      });
+      } as never);
 
       expect(formatted).toContain("skipped");
     });

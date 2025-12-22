@@ -113,7 +113,7 @@ describe("justTasks", () => {
       const { justTasks } = await import("./just.js");
       const linkTask = justTasks[0];
 
-      const formatted = linkTask.formatResult({ errors: 2, success: 0, skipped: 0 });
+      const formatted = linkTask.formatResult({ errors: 2, success: 0, skipped: 0 } as never);
 
       expect(formatted).toContain("2 errors");
     });
@@ -138,7 +138,7 @@ describe("justTasks", () => {
       const { justTasks } = await import("./just.js");
       const linkTask = justTasks[0];
 
-      const formatted = linkTask.formatResult({ errors: 0, success: 5, skipped: 2 });
+      const formatted = linkTask.formatResult({ errors: 0, success: 5, skipped: 2 } as never);
 
       expect(formatted).toContain("5 linked");
       expect(formatted).toContain("2 skipped");
@@ -223,7 +223,7 @@ describe("justTasks", () => {
         added: false,
         file: null,
         error: "some error",
-      });
+      } as never);
 
       expect(formatted).toContain("some error");
     });
@@ -253,7 +253,7 @@ describe("justTasks", () => {
         added: true,
         file: ".bashrc",
         error: null,
-      });
+      } as never);
 
       expect(formatted).toContain("added");
       expect(formatted).toContain(".bashrc");
@@ -284,7 +284,7 @@ describe("justTasks", () => {
         added: false,
         file: ".bashrc",
         error: null,
-      });
+      } as never);
 
       expect(formatted).toContain("skipped");
     });

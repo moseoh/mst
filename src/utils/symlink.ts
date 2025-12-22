@@ -3,10 +3,14 @@ import path from "path";
 
 const IGNORE_FILES = [".DS_Store", "Thumbs.db", ".gitkeep"];
 
-export interface FolderLinkConfig {
-  name: string;
+export interface FilesLinkConfig {
   srcDir: string;
   destDir: string;
+}
+
+export interface FolderLinkConfig {
+  src: string;
+  dest: string;
 }
 
 export interface LinkResult {
@@ -54,10 +58,7 @@ async function createSymlink(
   }
 }
 
-/**
- * 폴더 내 파일들을 재귀적으로 심볼릭 링크
- */
-async function linkFolderRecursive(
+async function linkFilesRecursive(
   srcDir: string,
   destDir: string,
   result: LinkResult
@@ -76,7 +77,7 @@ async function linkFolderRecursive(
     const stat = await fs.stat(srcPath);
 
     if (stat.isDirectory()) {
-      await linkFolderRecursive(srcPath, destPath, result);
+      await linkFilesRecursive(srcPath, destPath, result);
     } else if (stat.isFile()) {
       const status = await createSymlink(srcPath, destPath);
       if (status === "success") result.success++;
@@ -87,9 +88,9 @@ async function linkFolderRecursive(
 }
 
 /**
- * 폴더 링크 작업 실행
+ * 폴더 내 파일들을 재귀적으로 심볼릭 링크
  */
-export async function linkFolder(config: FolderLinkConfig): Promise<LinkResult> {
+export async function linkFiles(config: FilesLinkConfig): Promise<LinkResult> {
   const result: LinkResult = { success: 0, skipped: 0, errors: 0 };
 
   if (!(await fs.pathExists(config.srcDir))) {
@@ -97,6 +98,27 @@ export async function linkFolder(config: FolderLinkConfig): Promise<LinkResult> 
     return result;
   }
 
-  await linkFolderRecursive(config.srcDir, config.destDir, result);
+  await linkFilesRecursive(config.srcDir, config.destDir, result);
+  return result;
+}
+
+/**
+ * 폴더 자체를 심볼릭 링크
+ */
+export async function linkFolder(config: FolderLinkConfig): Promise<LinkResult> {
+  const result: LinkResult = { success: 0, skipped: 0, errors: 0 };
+
+  if (!(await fs.pathExists(config.src))) {
+    result.errors++;
+    return result;
+  }
+
+  await fs.ensureDir(path.dirname(config.dest));
+  const status = await createSymlink(config.src, config.dest);
+
+  if (status === "success") result.success++;
+  else if (status === "skip") result.skipped++;
+  else result.errors++;
+
   return result;
 }

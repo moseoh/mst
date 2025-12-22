@@ -1,7 +1,7 @@
 import path from "path";
 import pc from "picocolors";
 import { ASSETS_DIR, HOME_DIR, getShellRcPath } from "../config.js";
-import { linkFolder, appendIfMissing, type LinkResult } from "../utils/index.js";
+import { linkFiles, appendIfMissing, type LinkResult } from "../utils/index.js";
 import type { Task, TaskResult } from "../types.js";
 
 const SRC_DIR = path.join(ASSETS_DIR, "just");
@@ -16,8 +16,7 @@ const justLinkTask: Task = {
   description: "~/.config/just",
 
   async run(): Promise<LinkResult> {
-    return linkFolder({
-      name: this.name,
+    return linkFiles({
       srcDir: SRC_DIR,
       destDir: DEST_DIR,
     });
