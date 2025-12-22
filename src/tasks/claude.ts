@@ -1,7 +1,7 @@
 import path from "path";
 import pc from "picocolors";
 import { ASSETS_DIR, HOME_DIR } from "../lib/paths.js";
-import { linkFiles, linkFolder, type LinkResult } from "../lib/symlink.js";
+import { linkFolder, type LinkResult } from "../lib/symlink.js";
 import { setupAlias, type AliasResult } from "../lib/alias.js";
 import type { Task, TaskResult } from "./types.js";
 
@@ -11,30 +11,9 @@ const DEST_DIR = path.join(HOME_DIR, ".claude");
 const ALIAS_CONTENT = `# claude alias (added by mst)
 alias cc='claude --dangerously-skip-permissions'`;
 
-// Files Link Task
-const claudeFileLinkTask: Task = {
-  name: "link claude files",
-  description: "~/.claude (files)",
-
-  async run(): Promise<LinkResult> {
-    return linkFiles({
-      srcDir: path.join(SRC_DIR, "commands"),
-      destDir: path.join(DEST_DIR, "commands"),
-    });
-  },
-
-  formatResult(result: TaskResult): string {
-    const r = result as LinkResult;
-    if (r.errors > 0) {
-      return pc.red(`(${r.errors} errors)`);
-    }
-    return pc.dim(`(${r.success} linked, ${r.skipped} skipped)`);
-  },
-};
-
-// Folder Link Task
-const claudeFolderLinkTask: Task = {
-  name: "link claude plugins",
+// Plugin Link Task
+const claudePluginLinkTask: Task = {
+  name: "link claude plugin",
   description: "~/.claude/plugins",
 
   async run(): Promise<LinkResult> {
@@ -74,8 +53,4 @@ const claudeAliasTask: Task = {
   },
 };
 
-export const claudeTasks = [
-  claudeFileLinkTask,
-  claudeFolderLinkTask,
-  claudeAliasTask,
-];
+export const claudeTasks = [claudePluginLinkTask, claudeAliasTask];

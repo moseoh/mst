@@ -37,97 +37,6 @@ describe("claudeTasks", () => {
     vi.resetModules();
   });
 
-  describe("claudeLinkTask", () => {
-    it("claude 설정 파일을 링크해야 한다", async () => {
-      const homeDir = "/home/test";
-      vi.stubEnv("HOME", homeDir);
-      vi.stubEnv("USERPROFILE", "");
-
-      // assets 디렉토리 구조 생성 (commands 하위 디렉토리)
-      vol.fromJSON({
-        "/assets/claude/commands/commit.md": "# commit command",
-        "/assets/claude/commands/pr.md": "# pr command",
-        [`${homeDir}/.zshrc`]: "# existing config",
-      });
-
-      // lib/paths 모듈의 ASSETS_DIR, HOME_DIR을 오버라이드하기 위해 모킹
-      vi.doMock("../lib/paths.js", () => ({
-        ASSETS_DIR: "/assets",
-        HOME_DIR: homeDir,
-      }));
-
-      const { claudeTasks } = await import("./claude.js");
-      const linkTask = claudeTasks[0];
-
-      const result = await linkTask.run();
-
-      expect(result.errors).toBe(0);
-    });
-
-    it("소스 디렉토리가 없으면 에러를 반환해야 한다", async () => {
-      const homeDir = "/home/test";
-      vi.stubEnv("HOME", homeDir);
-      vi.stubEnv("USERPROFILE", "");
-
-      vol.fromJSON({
-        [`${homeDir}/.zshrc`]: "# existing config",
-      });
-
-      vi.doMock("../lib/paths.js", () => ({
-        ASSETS_DIR: "/nonexistent",
-        HOME_DIR: homeDir,
-      }));
-
-      const { claudeTasks } = await import("./claude.js");
-      const linkTask = claudeTasks[0];
-
-      const result = await linkTask.run();
-
-      expect(result.errors).toBeGreaterThan(0);
-    });
-
-    it("formatResult가 에러 메시지를 올바르게 포맷해야 한다", async () => {
-      const homeDir = "/home/test";
-      vi.stubEnv("HOME", homeDir);
-      vi.stubEnv("USERPROFILE", "");
-
-      vol.fromJSON({});
-
-      vi.doMock("../lib/paths.js", () => ({
-        ASSETS_DIR: "/assets",
-        HOME_DIR: homeDir,
-      }));
-
-      const { claudeTasks } = await import("./claude.js");
-      const linkTask = claudeTasks[0];
-
-      const formatted = linkTask.formatResult({ errors: 2, success: 0, skipped: 0 } as never);
-
-      expect(formatted).toContain("2 errors");
-    });
-
-    it("formatResult가 성공 메시지를 올바르게 포맷해야 한다", async () => {
-      const homeDir = "/home/test";
-      vi.stubEnv("HOME", homeDir);
-      vi.stubEnv("USERPROFILE", "");
-
-      vol.fromJSON({});
-
-      vi.doMock("../lib/paths.js", () => ({
-        ASSETS_DIR: "/assets",
-        HOME_DIR: homeDir,
-      }));
-
-      const { claudeTasks } = await import("./claude.js");
-      const linkTask = claudeTasks[0];
-
-      const formatted = linkTask.formatResult({ errors: 0, success: 3, skipped: 1 } as never);
-
-      expect(formatted).toContain("3 linked");
-      expect(formatted).toContain("1 skipped");
-    });
-  });
-
   describe("claudeAliasTask", () => {
     it("셸 RC 파일에 alias를 추가해야 한다", async () => {
       const homeDir = "/home/test";
@@ -144,7 +53,7 @@ describe("claudeTasks", () => {
       }));
 
       const { claudeTasks } = await import("./claude.js");
-      const aliasTask = claudeTasks[2];
+      const aliasTask = claudeTasks[1];
 
       const result = await aliasTask.run();
 
@@ -164,7 +73,7 @@ describe("claudeTasks", () => {
       }));
 
       const { claudeTasks } = await import("./claude.js");
-      const aliasTask = claudeTasks[2];
+      const aliasTask = claudeTasks[1];
 
       const result = await aliasTask.run();
 
@@ -184,7 +93,7 @@ describe("claudeTasks", () => {
       }));
 
       const { claudeTasks } = await import("./claude.js");
-      const aliasTask = claudeTasks[2];
+      const aliasTask = claudeTasks[1];
 
       const formatted = aliasTask.formatResult({
         errors: 1,
@@ -209,7 +118,7 @@ describe("claudeTasks", () => {
       }));
 
       const { claudeTasks } = await import("./claude.js");
-      const aliasTask = claudeTasks[2];
+      const aliasTask = claudeTasks[1];
 
       const formatted = aliasTask.formatResult({
         errors: 0,
@@ -235,7 +144,7 @@ describe("claudeTasks", () => {
       }));
 
       const { claudeTasks } = await import("./claude.js");
-      const aliasTask = claudeTasks[2];
+      const aliasTask = claudeTasks[1];
 
       const formatted = aliasTask.formatResult({
         errors: 0,
