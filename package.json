@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^22.10.0",
+    "@types/node": "^22.19.9",
     "@vitest/coverage-v8": "^4.0.17",
     "memfs": "^4.52.0",
     "typescript": "^5.3.0",
